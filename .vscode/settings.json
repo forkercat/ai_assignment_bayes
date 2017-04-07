@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "iostream": "cpp",
+        "iosfwd": "cpp",
+        "qpushbutton": "cpp",
+        "qapplication": "cpp",
+        "qlineedit": "cpp",
+        "*.tcc": "cpp",
+        "qtextedit": "cpp",
+        "qimage": "cpp",
+        "qdir": "cpp",
+        "qlayout": "cpp"
+    }
+}
