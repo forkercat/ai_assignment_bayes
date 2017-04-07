@@ -9,6 +9,7 @@
         "qtextedit": "cpp",
         "qimage": "cpp",
         "qdir": "cpp",
-        "qlayout": "cpp"
+        "qlayout": "cpp",
+        "qpixmap": "cpp"
     }
 }
