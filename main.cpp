@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 
     // Image
     QPixmap introImage;
-    introImage.load(":/images/bayes.jpg");
+    introImage.load(":/images/thomas_bayes1.jpg");
 
     QLabel imageLabel;
     imageLabel.setPixmap(introImage);
