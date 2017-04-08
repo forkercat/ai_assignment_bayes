@@ -2,6 +2,8 @@
 #include <QTextCodec>
 #include "mydialog.h"
 
+#include <iostream>
+
 int main(int argc, char **argv)
 {
     // QApplication
@@ -11,6 +13,8 @@ int main(int argc, char **argv)
     // UI
     MyDialog dialog;
     dialog.show();
+
+    std::cout << "Junhao GOOD!" << std::endl;
 
     return a.exec();
 }

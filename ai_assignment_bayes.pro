@@ -8,6 +8,6 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += mydialog.h
-SOURCES += mydialog.cpp main.cpp
+HEADERS += mydialog.h sample.h jhparser.h
+SOURCES += mydialog.cpp sample.cpp jhparser.cpp main.cpp
 RESOURCES += application.qrc

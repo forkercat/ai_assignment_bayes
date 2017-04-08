@@ -19,6 +19,7 @@ private:
 private slots:
     void onImportButtonClicked();
     void onClearButtonClicked();
+    void onTrainingButtonClicked();
     void criticalMessage(QString msg);
     void warningMessage(QString msg);
 };

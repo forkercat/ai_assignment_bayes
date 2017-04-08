@@ -13,6 +13,36 @@
         "qpixmap": "cpp",
         "qtextcodec": "cpp",
         "qtgui": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "sstream": "cpp",
+        "ostream": "cpp",
+        "cctype": "cpp",
+        "clocale": "cpp",
+        "cmath": "cpp",
+        "cstdarg": "cpp",
+        "cstddef": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp",
+        "cstring": "cpp",
+        "ctime": "cpp",
+        "cwchar": "cpp",
+        "cwctype": "cpp",
+        "exception": "cpp",
+        "istream": "cpp",
+        "limits": "cpp",
+        "memory": "cpp",
+        "new": "cpp",
+        "streambuf": "cpp",
+        "type_traits": "cpp",
+        "string": "cpp",
+        "vector": "cpp"
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/*.app": true,
+        "*.o": true,
+        "**/*.dSYM": true,
+        "temp-qxvskmitbr": true,
+        "test": true
     }
 }
