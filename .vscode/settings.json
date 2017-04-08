@@ -10,6 +10,9 @@
         "qimage": "cpp",
         "qdir": "cpp",
         "qlayout": "cpp",
-        "qpixmap": "cpp"
+        "qpixmap": "cpp",
+        "qtextcodec": "cpp",
+        "qtgui": "cpp",
+        "typeinfo": "cpp"
     }
 }
