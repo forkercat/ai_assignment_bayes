@@ -5,6 +5,8 @@
 #include "jhbayes.h"
 
 class QTextEdit;
+class QLabel;
+class QLineEdit;
 
 class MyDialog : public QDialog
 {
@@ -16,12 +18,16 @@ public:
 
 private:
     QTextEdit *sampleTextEdit;
+    QLabel *trainingResultLabel;
+    QLabel *predictResultLabel;
+    QLineEdit *predictLineEdit;
     JHBayes *bayes;
 
 private slots:
     void onImportButtonClicked();
     void onClearButtonClicked();
     void onTrainingButtonClicked();
+    void onTrainingClearButtonClicked();
     void criticalMessage(QString msg);
     void warningMessage(QString msg);
 };
