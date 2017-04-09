@@ -19,7 +19,7 @@ static const int MAIN_LAYOUT_MARGIN = 10;
 // font
 static const int LABEL_FONT_SIZE = 16;
 static const int BUTTON_FONT_SIZE = 16;
-static const int BUTTON_BIG_FONT_SIZE = 28;
+static const int BUTTON_BIG_FONT_SIZE = 18;
 static const int TEXT_FONT_SIZE = 16;
 
 MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
@@ -114,10 +114,9 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
 // Button Clicked
 void MyDialog::onImportButtonClicked()
 {
-    QStringList fileList = QFileDialog::getOpenFileNames(this, "选了你的TXT文件", ":/", "*.txt");
-    QString fileName = fileList[0];
+    QString fileName = QFileDialog::getOpenFileName(this, "选了你的TXT文件", ":/", "*.txt");
 
-    if (fileList.isEmpty()) {
+    if (fileName.isNull()) {
         // cancel
         return;
     } else {

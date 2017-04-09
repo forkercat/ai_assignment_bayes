@@ -43,6 +43,7 @@
         "*.o": true,
         "**/*.dSYM": true,
         "temp-qxvskmitbr": true,
-        "test": true
+        "test": true,
+        ".DS_Store": true
     }
 }
