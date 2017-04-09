@@ -10,6 +10,7 @@ using namespace std;
 
 JHBayes::JHBayes(const vector<Sample> temps, const set<string> labels) : samples(temps), classLabels(labels)
 {
+    // 成员初始化
     featureNum = samples[0].getFeatureNum();
     sampleNum = samples.size();
     all_means = vector<double>(featureNum, 0);
@@ -17,7 +18,7 @@ JHBayes::JHBayes(const vector<Sample> temps, const set<string> labels) : samples
     all_minVals = vector<double>(featureNum, 0);
     all_maxVals = vector<double>(featureNum, 0);
 
-    // rel
+    // 计算某个类别的样本个数
     set<string>::iterator it;
     for (it = classLabels.begin(); it != classLabels.end(); ++it) {
         class_means[*it] = vector<double>(featureNum, 0);
@@ -30,10 +31,11 @@ void JHBayes::goTraining()
 {
     // 计算均值和方差
     calcPreData();
-    // 特征缩放
+    // 特征缩放, 实际没有使用到.
     // featureScaling();
 }
 
+// 数据预处理
 void JHBayes::calcPreData()
 {
     // all
@@ -73,6 +75,7 @@ void JHBayes::calcPreData()
     calcClassMeansAndVariancesData();
 }
 
+// 数据预处理, 进一步得到平均值和方差
 void JHBayes::calcClassMeansAndVariancesData()
 {
     // classNum
@@ -84,7 +87,7 @@ void JHBayes::calcClassMeansAndVariancesData()
     set<string>::iterator it;
     for (it = classLabels.begin(); it != classLabels.end(); ++it) {
 
-        // class_means
+        // 类别平均值
         for (unsigned int i = 0; i < featureNum; ++i) {
             for (unsigned int j = 0; j < sampleNum; ++j) {
                 string label = samples[j].getClassLabel();
@@ -97,7 +100,7 @@ void JHBayes::calcClassMeansAndVariancesData()
             class_means[*it][i] /= (double)classNum[*it];
         }
 
-        // class_variances
+        // 类别方差
         for (unsigned int i = 0; i < featureNum; ++i) {
             for (unsigned int j = 0; j < sampleNum; ++j) {
                 string label = samples[j].getClassLabel();
@@ -125,14 +128,13 @@ void JHBayes::featureScaling()
     }
 }
 
-
-
+// 正态分布计算公式
 double JHBayes::probGaussian(double val, double mean, double variance)
 {
     return 1 / sqrt(2 * M_PI * variance) * exp(-pow(val - mean, 2) / (2 * variance));
 }
 
-
+// 预测
 void JHBayes::predict(vector<double> predVec, map< string, double > &result)
 {
     set<string>::iterator it;
@@ -140,7 +142,7 @@ void JHBayes::predict(vector<double> predVec, map< string, double > &result)
         string classStr = *it;
         double val = 0.0;
 
-        // P(f1|C) x P(f2|C) x P(f3|C) x P(C)
+        // 公式: P(f1|C) x P(f2|C) x P(f3|C) x P(C)
         double P_C = (double)classNum[classStr] / (double)samples.size();
         val = P_C;
 
@@ -149,7 +151,7 @@ void JHBayes::predict(vector<double> predVec, map< string, double > &result)
 
             P_val = probGaussian(predVec[i], class_means[classStr][i], class_variances[classStr][i]);
             
-            val *= P_val;
+            val *= P_val;   // 相当于: P(f1|C)
         }
 
         result[classStr] = val;

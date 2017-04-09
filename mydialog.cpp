@@ -11,12 +11,13 @@
 
 using namespace std;
 
-// width
+// 定义些常量
+
+// 宽度
 static const int LINE_EDIT_WIDTH = 195;
 static const int TRAINING_LABEL_WIDTH = 400;
 static const int PREDICT_LABEL_WIDTH = 400;
-
-// height
+// 高度
 static const int LINE_EDIT_HEIGHT = 30;
 static const int NORMAL_BUTTON_HEIGHT = 40;
 static const int TEXT_EDIT_HEIGHT = 140;
@@ -26,7 +27,7 @@ static const int PREDICT_LABEL_HEIGHT = 57;
 static const int PREDICT_LABEL_INDENT = 3;
 static const int LABEL_HEIGHT = 25;
 static const int MAIN_LAYOUT_MARGIN = 10;
-// font
+// 字体
 static const int SMALL_LABEL_FONT_SIZE = 14;
 static const int LABEL_FONT_SIZE = 16;
 static const int BUTTON_FONT_SIZE = 16;
@@ -38,7 +39,7 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
     // Window
     this->setWindowTitle("俊皓的朴素贝叶斯分类器");
 
-    // Image
+    // 图片
     QPixmap *introImage = new QPixmap;
     introImage->load(":/images/thomas_bayes1.jpg");
 
@@ -65,7 +66,7 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
     predictLabel->setFont(*labelFont);
     predictLabel->setFixedHeight(LABEL_HEIGHT);
 
-    QLabel *endingLabel = new QLabel("ai_assignment_bayes © 2017 Junhao");
+    QLabel *endingLabel = new QLabel("ai_assignment_bayes © 2017 Junhao (2014101027)");
     endingLabel->setFont(*smallLabelFont);
     endingLabel->setFixedHeight(SMALL_LABEL_FONT_SIZE);
     endingLabel->setAlignment(Qt::AlignHCenter);
@@ -178,13 +179,13 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
 
     this->show();
 
-    // resize to the best fitting
+    // 重新调整大小
     this->adjustSize();
-    // not allow to change the size
+    // 这样可以使得窗口大小不可以变化
     this->setMinimumSize(this->size());
     this->setMaximumSize(this->size());
 
-    // connect & slot
+    // 设置连接槽, 按钮事件
     connect(sampleImportBtn, SIGNAL(clicked()), this, SLOT(onImportButtonClicked()));
 
     connect(sampleClearBtn, SIGNAL(clicked()), this, SLOT(onClearButtonClicked()));
@@ -196,7 +197,9 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
     connect(predictBtn, SIGNAL(clicked()), this, SLOT(onPredictButtonClicked()));
 }
 
-// Button Clicked
+// Button Clicked 按钮事件
+
+// 导入TXT文件
 void MyDialog::onImportButtonClicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, "选了你的TXT文件", ":/", "*.txt");
@@ -225,11 +228,13 @@ void MyDialog::onImportButtonClicked()
     }
 }
 
+// 清空样本输入框
 void MyDialog::onClearButtonClicked()
 {
     sampleTextEdit->setText("");
 }
 
+// 点击训练按钮
 void MyDialog::onTrainingButtonClicked()
 {
     string text = sampleTextEdit->toPlainText().toStdString();
@@ -346,13 +351,16 @@ void MyDialog::onTrainingButtonClicked()
         classVarianceStr += "\n";
     }
 
+    // 组合结果字符串
     char str[4096];
     sprintf(str, "样本个数:  %d      特征个数:  %d      分类个数:  %d      类别:  %s\n最小值:  %s\n最大值:   %s\n平均值:  %s\n方差值:  %s\n%s%s", sampleNum, featureNum, classNum, classStr.c_str(), minStr.c_str(), maxStr.c_str(), meanStr.c_str(), varianceStr.c_str(), classMeanStr.c_str(), classVarianceStr.c_str());
 
+    // 更新显示训练结果
     trainingResultLabel->setText(str);
     trainingResultLabel->adjustSize();
 }
 
+// 训练模型清空
 void MyDialog::onTrainingClearButtonClicked()
 {
     bayes = NULL;
@@ -360,6 +368,7 @@ void MyDialog::onTrainingClearButtonClicked()
     trainingResultLabel->adjustSize();
 }
 
+// 点击预测按钮
 void MyDialog::onPredictButtonClicked()
 {
     string text = predictLineEdit->text().toStdString();
@@ -427,15 +436,14 @@ void MyDialog::onPredictButtonClicked()
     char nl[3] = "\n";
     predStr += nl;
 
-    // 详细的P
+    // 详细的Probability
     predStr += temp;
 
-    // char c_predStr[100];
     predictResultLabel->setText(predStr.c_str());
     predictResultLabel->adjustSize();
 }
 
-// Message
+// 消息框
 void MyDialog::criticalMessage(QString msg)
 {
     QMessageBox::StandardButton reply;

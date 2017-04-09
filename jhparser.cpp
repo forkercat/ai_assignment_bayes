@@ -11,10 +11,12 @@ using namespace std;
 
 void JHParser::clearData()
 {
+    // 清空成员数据
     samples.clear();
     classLabels.clear();
 }
 
+// 解析样本, 生成vector<Sample>, 以及数据转换
 bool JHParser::parseSamples()
 {
     // 清空
@@ -22,7 +24,7 @@ bool JHParser::parseSamples()
 
     if (inputText.length() == 0) return false;
 
-    // split samples
+    // 分割样本
     vector<string> strResult;
     replace_and_split(inputText, strResult);
 
@@ -59,7 +61,7 @@ bool JHParser::parseSamples()
     return true;
 }
 
-
+// 解析预测输入
 bool JHParser::parsePrediction(vector<double> &result)
 {
     // 清空
@@ -83,8 +85,8 @@ bool JHParser::parsePrediction(vector<double> &result)
 
 void JHParser::replace_and_split(string &str, vector<string> &result)
 {
-    // 想了半天只能这样了, 效果亲测可以.
-    // this can format the text well, with no more blanks and lines.
+    // 想了半天只能这样了, 效果亲测可以. 可以去掉多余的空格和空行.
+    // 亲自发明的
     string str1 = replace_distinct(str, "\r", "#");
     string str2 = replace_distinct(str1, "\n", "#");
     string str3 = replace_distinct(str2, "# ", "#");
@@ -93,6 +95,7 @@ void JHParser::replace_and_split(string &str, vector<string> &result)
     result = split_string(str5, "#");
 }
 
+// 替换字符串的字符, 连续替换
 string & JHParser::replace_sucessive(string &str, const string &old_value, const string &new_value)
 {
     while (true) {
@@ -105,6 +108,7 @@ string & JHParser::replace_sucessive(string &str, const string &old_value, const
     return str;
 }
 
+// 替换字符串的字符, 不连续替换
 string & JHParser::replace_distinct(string &str, const string &old_value, const string &new_value)
 {
     for (string::size_type pos(0); pos != string::npos; pos += new_value.length()) {
@@ -116,6 +120,7 @@ string & JHParser::replace_distinct(string &str, const string &old_value, const 
     return str;
 }
 
+// 分割字符串
 vector<string> JHParser::split_string(string str, string pattern)
 {
     vector<string> result;

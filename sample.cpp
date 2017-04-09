@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+// 显示数据, 调试
 void Sample::display()
 {
     std::cout << "ClassLabel:" << classLabel << std::endl;

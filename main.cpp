@@ -8,14 +8,14 @@ int main(int argc, char **argv)
 {
     // QApplication
     QApplication a(argc, argv);
-    // Coding
+    // 编码
     QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
-    // UI
+    // 窗口视图
     MyDialog dialog;
     dialog.show();
 
     std::cout << "Junhao GOOD!" << std::endl;
-
+    
     return a.exec();
 }
 
