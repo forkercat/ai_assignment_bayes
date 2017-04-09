@@ -7,4 +7,7 @@ qrc_application.cpp
 temp-qxvskmitbr
 test.py
 test
-.gitignore
+./.gitignore
+.vscode
+bayes.dSYM/*
+ai_assignment_bayes.app/*
