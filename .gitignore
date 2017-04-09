@@ -1,2 +1,5 @@
 *.o
 .DS_Store
+test.cpp
+moc_mydialog.cpp
+PHTexxtEdit.h

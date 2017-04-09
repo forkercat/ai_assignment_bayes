@@ -36,7 +36,7 @@ static const int TEXT_FONT_SIZE = 14;
 
 MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
 {
-    // Window
+    // 窗口
     this->setWindowTitle("俊皓的朴素贝叶斯分类器");
 
     // 图片
