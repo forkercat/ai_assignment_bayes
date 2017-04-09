@@ -28,6 +28,7 @@ private slots:
     void onClearButtonClicked();
     void onTrainingButtonClicked();
     void onTrainingClearButtonClicked();
+    void onPredictButtonClicked();
     void criticalMessage(QString msg);
     void warningMessage(QString msg);
 };

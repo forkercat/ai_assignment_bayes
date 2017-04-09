@@ -10,14 +10,14 @@
 class JHParser
 {
 public:
-    JHParser(std::string text) : inputText(text) {
-        classLabels = std::set<std::string>();
-    }
+    JHParser() {}
     ~JHParser() {}
     
-    bool parse(); // if error occurs, return false.
+    bool parseSamples(); // if error occurs, return false.
+    bool parsePrediction(std::vector<double> &result);
     std::vector<Sample> getSamples() { return samples; }
     std::set<std::string> getClassLabels() { return classLabels; }
+    void setInputText(std::string text) { inputText = text; }
 
 private:
     std::string inputText;

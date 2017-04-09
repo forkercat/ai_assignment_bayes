@@ -35,7 +35,8 @@
         "streambuf": "cpp",
         "type_traits": "cpp",
         "string": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "set": "cpp"
     },
     "files.exclude": {
         "**/.git": true,

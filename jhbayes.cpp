@@ -20,8 +20,8 @@ JHBayes::JHBayes(const vector<Sample> temps, const set<string> labels) : samples
     // rel
     set<string>::iterator it;
     for (it = classLabels.begin(); it != classLabels.end(); ++it) {
-        rel_means[*it] = vector<double>(featureNum, 0);
-        rel_variances[*it] = vector<double>(featureNum, 0);
+        class_means[*it] = vector<double>(featureNum, 0);
+        class_variances[*it] = vector<double>(featureNum, 0);
         classNum[*it] = 0;
     }
 }
@@ -32,11 +32,6 @@ void JHBayes::goTraining()
     calcPreData();
     // 特征缩放
     // featureScaling();
-    // 再计算一次
-    // calcPreData();
-
-    calcRelData();
-
 }
 
 void JHBayes::calcPreData()
@@ -73,9 +68,12 @@ void JHBayes::calcPreData()
         // 到最后一个求平均数
         all_variances[i] /= (double)sampleNum;
     }
+
+    // 计算各类均值和方差
+    calcClassMeansAndVariancesData();
 }
 
-void JHBayes::calcRelData()
+void JHBayes::calcClassMeansAndVariancesData()
 {
     // classNum
     for (unsigned int i = 0; i < sampleNum; ++i) {
@@ -86,36 +84,36 @@ void JHBayes::calcRelData()
     set<string>::iterator it;
     for (it = classLabels.begin(); it != classLabels.end(); ++it) {
 
-        // rel_means
+        // class_means
         for (unsigned int i = 0; i < featureNum; ++i) {
             for (unsigned int j = 0; j < sampleNum; ++j) {
                 string label = samples[j].getClassLabel();
                 if (label.compare(*it) == 0) {
                     double val = samples[j].getFeature(i);
-                    rel_means[*it][i] += val;
+                    class_means[*it][i] += val;
                 }
             }
             // 到最后一个求平均数
-            rel_means[*it][i] /= (double)classNum[*it];
+            class_means[*it][i] /= (double)classNum[*it];
         }
 
-        // rel_variances
+        // class_variances
         for (unsigned int i = 0; i < featureNum; ++i) {
             for (unsigned int j = 0; j < sampleNum; ++j) {
                 string label = samples[j].getClassLabel();
-                if (label.compare(*it)) {
+                if (label.compare(*it) == 0) {
                     double val = samples[j].getFeature(i);
-                    rel_variances[*it][i] += pow(val - rel_means[*it][i], 2);
+                    class_variances[*it][i] += pow(val - class_means[*it][i], 2);
                 }
             }
-            // 到最后一个求平均数
-            rel_variances[*it][i] /= (double)classNum[*it];
+            // 到最后一个求方差数
+            class_variances[*it][i] /= (double)(classNum[*it] - 1);
         }
     }
 }
 
 
-
+// 特征缩放
 void JHBayes::featureScaling()
 {
     for (unsigned int i = 0; i < sampleNum; ++i) {
@@ -127,7 +125,33 @@ void JHBayes::featureScaling()
     }
 }
 
+
+
 double JHBayes::probGaussian(double val, double mean, double variance)
 {
     return 1 / sqrt(2 * M_PI * variance) * exp(-pow(val - mean, 2) / (2 * variance));
+}
+
+
+void JHBayes::predict(vector<double> predVec, map< string, double > &result)
+{
+    set<string>::iterator it;
+    for (it = classLabels.begin(); it != classLabels.end(); ++it) {
+        string classStr = *it;
+        double val = 0.0;
+
+        // P(f1|C) x P(f2|C) x P(f3|C) x P(C)
+        double P_C = (double)classNum[classStr] / (double)samples.size();
+        val = P_C;
+
+        for (unsigned int i = 0; i < predVec.size(); ++i) {
+            double P_val = 0.0;
+
+            P_val = probGaussian(predVec[i], class_means[classStr][i], class_variances[classStr][i]);
+            
+            val *= P_val;
+        }
+
+        result[classStr] = val;
+    }
 }

@@ -9,6 +9,8 @@
 #include "sample.h"
 #include "jhparser.h"
 
+using namespace std;
+
 // width
 static const int LINE_EDIT_WIDTH = 195;
 static const int TRAINING_LABEL_WIDTH = 400;
@@ -17,10 +19,10 @@ static const int PREDICT_LABEL_WIDTH = 400;
 // height
 static const int LINE_EDIT_HEIGHT = 30;
 static const int NORMAL_BUTTON_HEIGHT = 40;
-static const int TEXT_EDIT_HEIGHT = 110;
-static const int TRAINING_LABEL_HEIGHT = 110;
+static const int TEXT_EDIT_HEIGHT = 140;
+static const int TRAINING_LABEL_HEIGHT = 140;
 static const int TRAINING_LABEL_INDENT = 3;
-static const int PREDICT_LABEL_HEIGHT = 40;
+static const int PREDICT_LABEL_HEIGHT = 57;
 static const int PREDICT_LABEL_INDENT = 3;
 static const int LABEL_HEIGHT = 25;
 static const int MAIN_LAYOUT_MARGIN = 10;
@@ -29,7 +31,7 @@ static const int SMALL_LABEL_FONT_SIZE = 14;
 static const int LABEL_FONT_SIZE = 16;
 static const int BUTTON_FONT_SIZE = 16;
 static const int BUTTON_BIG_FONT_SIZE = 18;
-static const int TEXT_FONT_SIZE = 15;
+static const int TEXT_FONT_SIZE = 14;
 
 MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
 {
@@ -51,7 +53,7 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
     QFont *smallLabelFont = new QFont;
     smallLabelFont->setPointSize(SMALL_LABEL_FONT_SIZE);
 
-    QLabel *sampleLabel = new QLabel("训练集 :");
+    QLabel *sampleLabel = new QLabel("训练集 : (可粘贴)");
     sampleLabel->setFont(*labelFont);
     sampleLabel->setFixedHeight(LABEL_HEIGHT);
 
@@ -76,12 +78,13 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
     sampleTextEdit->setFixedHeight(TEXT_EDIT_HEIGHT);
     sampleTextEdit->setFont(*textFont);
     sampleTextEdit->setText("请用矩阵形式; 特征由空格隔开; 样本由换行分开; 类别在第一列.");
-    
+
     // TrainingResultLabel
     QScrollArea *trainingScrollArea = new QScrollArea;
     trainingScrollArea->setFixedWidth(TRAINING_LABEL_WIDTH);
     trainingScrollArea->setFixedHeight(TRAINING_LABEL_HEIGHT);
     trainingResultLabel = new QLabel;
+    trainingResultLabel->setScaledContents(true);
     trainingResultLabel->setFont(*textFont);
     trainingResultLabel->setIndent(TRAINING_LABEL_INDENT);
     trainingResultLabel->setText("<空>");
@@ -92,14 +95,14 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
     predictLineEdit->setFixedWidth(LINE_EDIT_WIDTH);
     predictLineEdit->setFixedHeight(LINE_EDIT_HEIGHT);
     predictLineEdit->setFont(*textFont);
-    predictLineEdit->setPlaceholderText("类别 特征1 特征2 ... 特征n");
+    predictLineEdit->setPlaceholderText("特征值1 特征值2 ... 特征值n");
 
     // PredictResultLabel
     QScrollArea *predictScrollArea = new QScrollArea;
     predictScrollArea->setFixedWidth(PREDICT_LABEL_WIDTH);
     predictScrollArea->setFixedHeight(PREDICT_LABEL_HEIGHT);
-    std::cout << predictScrollArea->width() << std::endl;
     predictResultLabel = new QLabel;
+    predictResultLabel->setScaledContents(true);
     predictResultLabel->setFont(*textFont);
     predictResultLabel->setIndent(PREDICT_LABEL_INDENT);
     predictResultLabel->setText("<空>");
@@ -111,7 +114,7 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
     QFont *btnBigFont = new QFont;
     btnBigFont->setPointSize(BUTTON_BIG_FONT_SIZE);
 
-    QPushButton *sampleImportBtn = new QPushButton("导入TXT");
+    QPushButton *sampleImportBtn = new QPushButton("导入txt");
     sampleImportBtn->setFont(*btnFont);
     sampleImportBtn->setFixedHeight(NORMAL_BUTTON_HEIGHT);
 
@@ -119,7 +122,7 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
     sampleClearBtn->setFont(*btnFont);
     sampleClearBtn->setFixedHeight(NORMAL_BUTTON_HEIGHT);
 
-    QPushButton *trainingBtn = new QPushButton("训练 GO");
+    QPushButton *trainingBtn = new QPushButton("训练 Go");
     trainingBtn->setFont(*btnFont);
     trainingBtn->setFixedHeight(NORMAL_BUTTON_HEIGHT);
 
@@ -127,7 +130,7 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
     trainingClearBtn->setFont(*btnFont);
     trainingClearBtn->setFixedHeight(NORMAL_BUTTON_HEIGHT);
 
-    QPushButton *predictBtn = new QPushButton("预测 GO");
+    QPushButton *predictBtn = new QPushButton("预测 Go");
     predictBtn->setFont(*btnFont);
     predictBtn->setFixedHeight(NORMAL_BUTTON_HEIGHT);
 
@@ -182,15 +185,15 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
     this->setMaximumSize(this->size());
 
     // connect & slot
-    connect(sampleImportBtn, SIGNAL(clicked()), this, SLOT
-    (onImportButtonClicked()));
+    connect(sampleImportBtn, SIGNAL(clicked()), this, SLOT(onImportButtonClicked()));
 
     connect(sampleClearBtn, SIGNAL(clicked()), this, SLOT(onClearButtonClicked()));
 
-    connect(trainingBtn, SIGNAL(clicked()), this, SLOT
-    (onTrainingButtonClicked()));
+    connect(trainingBtn, SIGNAL(clicked()), this, SLOT(onTrainingButtonClicked()));
 
     connect(trainingClearBtn, SIGNAL(clicked()), this, SLOT(onTrainingClearButtonClicked()));
+
+    connect(predictBtn, SIGNAL(clicked()), this, SLOT(onPredictButtonClicked()));
 }
 
 // Button Clicked
@@ -209,7 +212,7 @@ void MyDialog::onImportButtonClicked()
         }
         // clear before
         sampleTextEdit->setText("");
-        while(!file.atEnd()) {
+        while (!file.atEnd()) {
             QByteArray line = file.readLine();
             QString sampleStr(line);
             if (sampleStr.isEmpty())
@@ -218,7 +221,7 @@ void MyDialog::onImportButtonClicked()
             sampleTextEdit->setText(currentStr + sampleStr);
         }
 
-        std::cout << sampleTextEdit->toPlainText().toStdString() << std::endl;
+        cout << sampleTextEdit->toPlainText().toStdString() << endl;
     }
 }
 
@@ -229,29 +232,207 @@ void MyDialog::onClearButtonClicked()
 
 void MyDialog::onTrainingButtonClicked()
 {
-    std::string text = sampleTextEdit->toPlainText().toStdString();
+    string text = sampleTextEdit->toPlainText().toStdString();
 
     // JHParser
-    JHParser parser(text);
+    JHParser parser;
+    parser.setInputText(text);
 
-    if (parser.parse() == false) {
-        criticalMessage("训练失败!\n请尝试按照要求格式化输入文本.");
+    if (parser.parseSamples() == false) {
+        criticalMessage("训练失败!\n请按照要求格式化输入文本.");
         return;
     }
 
-    std::set<std::string> labels;
+    set<string> labels;
     labels = parser.getClassLabels();
-    std::vector<Sample> samples;
+    vector<Sample> samples;
     samples = parser.getSamples();
 
     // JHBayes
     bayes = new JHBayes(samples, labels);
     bayes->goTraining();
+
+    // 显示训练结果
+    unsigned int featureNum = samples[0].getFeatureNum();
+    unsigned int sampleNum = samples.size();
+    unsigned int classNum = labels.size();
+    vector<double> all_means = bayes->get_all_means();
+    vector<double> all_variances = bayes->get_all_variances();
+    vector<double> all_maxVals = bayes->get_all_maxVals();
+    vector<double> all_minVals = bayes->get_all_minVals();
+    map< string, vector<double> > class_means = bayes->get_class_means();
+    map< string, vector<double> > class_variances = bayes->get_class_variances();
+
+    // 格式化字符串
+
+    // 类别
+    string classStr = "";
+    set<string>::iterator it;
+    for (it = labels.begin(); it != labels.end(); ++it) {
+        classStr += (*it);
+        classStr += "  ";
+    }
+
+    // 平均值
+    string meanStr = "";
+    for (unsigned int i = 0; i < all_means.size(); ++i) {
+        char temp[10];
+        sprintf(temp, "%.3lf", all_means[i]);
+        meanStr += temp;
+        meanStr += "  ";
+    }
+
+    // 方差值
+    string varianceStr = "";
+    for (unsigned int i = 0; i < all_variances.size(); ++i) {
+        char temp[10];
+        sprintf(temp, "%.3lf", all_variances[i]);
+        varianceStr += temp;
+        varianceStr += "  ";
+    }
+
+    // 最小值
+    string minStr = "";
+    for (unsigned int i = 0; i < all_minVals.size(); ++i) {
+        char temp[10];
+        sprintf(temp, "%.3lf", all_minVals[i]);
+        minStr += temp;
+        minStr += "  ";
+    }
+
+    // 最大值
+    string maxStr = "";
+    for (unsigned int i = 0; i < all_maxVals.size(); ++i) {
+        char temp[10];
+        sprintf(temp, "%.3lf", all_maxVals[i]);
+        maxStr += temp;
+        maxStr += "  ";
+    }
+
+    // 各类平均值 & 方差值
+    string classMeanStr = "";
+    string classVarianceStr = "";
+    set<string>::iterator ite;
+    for (ite = labels.begin(); ite != labels.end(); ++ite)
+    {
+
+        vector<double> classMeanV = class_means[*ite];
+        vector<double> classVarianceV = class_variances[*ite];
+
+        classMeanStr += "平均值(";
+        classMeanStr += *ite;
+        classMeanStr += "):   ";
+        classVarianceStr += "方差值(";
+        classVarianceStr += *ite;
+        classVarianceStr += "):   ";
+
+        for (unsigned int i = 0; i < featureNum; ++i)
+        {
+            double mean_val = classMeanV[i];
+            double vari_val = classVarianceV[i];
+
+            char mean_val_temp[10];
+            char vari_val_temp[10];
+
+            sprintf(mean_val_temp, "%.3lf", mean_val);
+            sprintf(vari_val_temp, "%.3lf", vari_val);
+
+            classMeanStr += mean_val_temp;
+            classVarianceStr += vari_val_temp;
+            classMeanStr += "  ";
+            classVarianceStr += "  ";
+        }
+        classMeanStr += "\n";
+        classVarianceStr += "\n";
+    }
+
+    char str[4096];
+    sprintf(str, "样本个数:  %d      特征个数:  %d      分类个数:  %d      类别:  %s\n最小值:  %s\n最大值:   %s\n平均值:  %s\n方差值:  %s\n%s%s", sampleNum, featureNum, classNum, classStr.c_str(), minStr.c_str(), maxStr.c_str(), meanStr.c_str(), varianceStr.c_str(), classMeanStr.c_str(), classVarianceStr.c_str());
+
+    trainingResultLabel->setText(str);
+    trainingResultLabel->adjustSize();
 }
 
 void MyDialog::onTrainingClearButtonClicked()
 {
+    bayes = NULL;
     trainingResultLabel->setText("<空>");
+    trainingResultLabel->adjustSize();
+}
+
+void MyDialog::onPredictButtonClicked()
+{
+    string text = predictLineEdit->text().toStdString();
+
+    // JHParser
+    JHParser parser;
+    parser.setInputText(text);
+
+    if (bayes == NULL) {
+        criticalMessage("请先训练贝叶斯模型.");
+        return;
+    }
+
+    vector<double> predVec;
+
+    if (parser.parsePrediction(predVec) == false) {
+        criticalMessage("请按照要求格式化输入文本.");
+        return;
+    }
+
+    // 检查特征个数是否一致
+    if (predVec.size() != bayes->getFeatureNum()) {
+        criticalMessage("输入的特征数与模型不一致.");
+        return;
+    }
+
+    // 进行预测
+    map< string, double > predResult;
+    bayes->predict(predVec, predResult);
+
+    // 比较 & 显示预测结果
+    string predStr = "结果为:  ";
+
+    map< string, double >::iterator it;
+    it = predResult.begin();
+
+    // 预设最大值为第一个
+    string maxStr = it->first;
+    double maxVal = it->second;
+
+    string temp = "";
+    for (it = predResult.begin(); it != predResult.end(); ++it) {
+        string classStr = it->first;
+        double pResult = it->second;
+
+        // 更新最大值
+        if (pResult > maxVal) {
+            maxStr = classStr;
+            maxVal = pResult;
+        }
+
+        char str[15];
+        sprintf(str, "%.8lf", pResult);
+        temp += "P(";
+        temp += classStr;
+        temp += " | 数据) = ";
+        temp += str;
+        temp += "   ";
+
+        cout << str << endl;
+    }
+
+    // 结果
+    predStr += maxStr;
+    char nl[3] = "\n";
+    predStr += nl;
+
+    // 详细的P
+    predStr += temp;
+
+    // char c_predStr[100];
+    predictResultLabel->setText(predStr.c_str());
+    predictResultLabel->adjustSize();
 }
 
 // Message
@@ -259,14 +440,14 @@ void MyDialog::criticalMessage(QString msg)
 {
     QMessageBox::StandardButton reply;
     reply = QMessageBox::critical(this, "错误",
-                                    msg,
-                                    QMessageBox::Ok);
+                                  msg,
+                                  QMessageBox::Ok);
 }
 
 void MyDialog::warningMessage(QString msg)
 {
     QMessageBox::StandardButton reply;
     reply = QMessageBox::warning(this, "警告",
-                                    msg,
-                                    QMessageBox::Ok);
+                                 msg,
+                                 QMessageBox::Ok);
 }

@@ -15,7 +15,7 @@ void JHParser::clearData()
     classLabels.clear();
 }
 
-bool JHParser::parse()
+bool JHParser::parseSamples()
 {
     // 清空
     clearData();
@@ -26,14 +26,7 @@ bool JHParser::parse()
     vector<string> strResult;
     replace_and_split(inputText, strResult);
 
-    // display and see see if ok?
-    cout << "Parsing:" << endl;
-    for (unsigned int i = 0; i < (strResult.size() > 5 ? 5 : strResult.size()); ++i) {
-        cout << strResult[i] << endl;
-    }
-    cout << endl;
-
-    if (strResult.size() < 2)  return false;
+    if (strResult.size() < 1)  return false;
 
     // string -> double, split each sample
     // vector<Sample> result;
@@ -66,7 +59,29 @@ bool JHParser::parse()
     return true;
 }
 
-void JHParser::replace_and_split(string &str, std::vector<std::string> &result)
+
+bool JHParser::parsePrediction(vector<double> &result)
+{
+    // 清空
+    clearData();
+
+    if (inputText.length() == 0) return false;
+
+    // split samples
+    vector<string> temp;
+    temp = split_string(inputText, " ");
+    
+    // to double
+    for (unsigned int i = 0; i < temp.size(); ++i) {
+        result.push_back(atof(temp[i].c_str()));
+    }
+    
+    if (result.size() < 1)  return false;
+
+    return true;
+}
+
+void JHParser::replace_and_split(string &str, vector<string> &result)
 {
     // 想了半天只能这样了, 效果亲测可以.
     // this can format the text well, with no more blanks and lines.
