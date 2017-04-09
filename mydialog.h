@@ -2,6 +2,7 @@
 #define MYDIALOG_H
 
 #include <QDialog>
+#include "jhbayes.h"
 
 class QTextEdit;
 
@@ -15,6 +16,7 @@ public:
 
 private:
     QTextEdit *sampleTextEdit;
+    JHBayes *bayes;
 
 private slots:
     void onImportButtonClicked();

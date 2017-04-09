@@ -8,18 +8,18 @@
 
 #include "sample.h"
 #include "jhparser.h"
-#include "jhbayes.h"
+
 
 // height
 static const int NORMAL_BUTTON_HEIGHT = 40;
-static const int PRIMARY_BUTTON_HEIGHT = 80;
+static const int PRIMARY_BUTTON_HEIGHT = 60;
 static const int TEXT_EDIT_HEIGHT = 180;
 static const int LABEL_HEIGHT = 25;
 static const int MAIN_LAYOUT_MARGIN = 10;
 // font
 static const int LABEL_FONT_SIZE = 16;
 static const int BUTTON_FONT_SIZE = 16;
-static const int BUTTON_BIG_FONT_SIZE = 24;
+static const int BUTTON_BIG_FONT_SIZE = 28;
 static const int TEXT_FONT_SIZE = 16;
 
 MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
@@ -68,7 +68,7 @@ MyDialog::MyDialog(QWidget *parent) : QDialog(parent)
     sampleClearBtn->setFont(*btnFont);
     sampleClearBtn->setFixedHeight(NORMAL_BUTTON_HEIGHT);
 
-    QPushButton *trainingBtn = new QPushButton("开始训练");
+    QPushButton *trainingBtn = new QPushButton("训练, GO!");
     trainingBtn->setFont(*btnBigFont);
     trainingBtn->setFixedHeight(PRIMARY_BUTTON_HEIGHT);
 
@@ -163,19 +163,9 @@ void MyDialog::onTrainingButtonClicked()
     std::vector<Sample> samples;
     samples = parser.getSamples();
 
-    /*  testing
-    for (unsigned int i = 0; i < samples.size(); ++i) {
-        Sample sample = samples[i];
-        std::cout << sample.getClassLabel() << " ";
-
-        for (unsigned int j = 0; j < 3; ++j) {
-            std::cout << sample.getFeature(j) << " ";
-        }
-        std::cout << std::endl;
-    }
-    */
-
     // JHBayes
+    bayes = new JHBayes(samples, labels);
+    bayes->goTraining();
 }
 
 // Message

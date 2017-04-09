@@ -3,6 +3,8 @@
 #include <sstream>
 #include <vector>
 
+#include <math.h>
+
 using namespace std;
 
 string &replace_all(string &str, const string &old_value, const string &new_value)
@@ -64,12 +66,8 @@ int main(int argc, char **argv)
         cout << result[i] << endl << endl;
     }
 
-    string attr = "";
-
-    while (stream << result[0]) {
-        stream >> attr;
-        cout << attr << endl;
-    }
-
+    
+    cout << 1 / sqrt(2 * M_PI * 0.035) * exp(-pow(6 - 5.855, 2) / (2 * 0.035)) << endl;
+    
     return 0;
 }

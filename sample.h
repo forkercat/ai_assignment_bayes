@@ -14,7 +14,8 @@ public:
     void display();
     std::string getClassLabel() { return classLabel; }
     double getFeature(int index) { return features[index]; }
-
+    void setFeature(int index, double val) { features[index] = val; }
+    unsigned int getFeatureNum() { return features.size(); }
 private:
     std::string classLabel;
     std::vector<double> features;
