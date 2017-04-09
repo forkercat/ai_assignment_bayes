@@ -2,8 +2,9 @@
 .DS_Store
 test.cpp
 moc_mydialog.cpp
-PHTexxtEdit.h
+PHTextEdit.h
 qrc_application.cpp
 temp-qxvskmitbr
 test.py
 test
+.gitignore
